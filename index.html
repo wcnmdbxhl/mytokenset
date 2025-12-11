@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>添加代币到 MetaMask</title>
+    <style>
+        /* 简单的按钮样式，你可以随遇修改 */
+        .add-btn {
+            background-color: #f6851b; /* MetaMask 橙色 */
+            color: white;
+            padding: 15px 30px;
+            font-size: 18px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+        }
+        .add-btn:hover {
+            background-color: #e2761b;
+        }
+    </style>
+</head>
+<body>
+
+    <button class="add-btn" onclick="addToken()">
+        添加代币到 MetaMask 🦊
+    </button>
+
+    <script>
+        async function addToken() {
+            // 1. 你的代币配置信息
+            const tokenAddress = '0xaccCCc9B9D342adD1001ba4F451716136E39394C'; // 你提供的地址
+            const tokenSymbol = 'MIA';    // 【重要】请修改为你的代币符号 (例如: BTC, USDT)
+            const tokenDecimals = 18;      // 【重要】请修改为你的代币精度 (通常是18)
+            
+            // 2. 代币图标链接
+            // 目前使用占位图。正式使用时，请替换为你的 HTTPS 图片链接 (比如 GitHub raw 链接或你的官网图片)
+            const tokenImage = 'https://github.com/wcnmdbxhl/mytokenset/blob/main/mia.jpg?raw=true'; 
+
+            try {
+                // 检查是否安装了 MetaMask
+                const { ethereum } = window;
+                if (!ethereum) {
+                    alert('请先安装 MetaMask 钱包！');
+                    return;
+                }
+
+                // 发送请求
+                const wasAdded = await ethereum.request({
+                    method: 'wallet_watchAsset',
+                    params: {
+                        type: 'ERC20', 
+                        options: {
+                            address: tokenAddress, 
+                            symbol: tokenSymbol, 
+                            decimals: tokenDecimals, 
+                            image: tokenImage, 
+                        },
+                    },
+                });
+
+                if (wasAdded) {
+                    console.log('成功！代币已添加。');
+                    alert('代币添加成功！请查看你的钱包。');
+                } else {
+                    console.log('用户取消了操作。');
+                }
+            } catch (error) {
+                console.error(error);
+                alert('发生错误，请查看控制台。');
+            }
+        }
+    </script>
+
+</body>
+</html>
